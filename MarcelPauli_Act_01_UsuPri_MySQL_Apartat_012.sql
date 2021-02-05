@@ -1,0 +1,1 @@
+--No me deja entrar porque le doy permisos a la base de datos de videoclub no de empresa
