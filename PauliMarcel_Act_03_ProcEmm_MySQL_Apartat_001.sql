@@ -20,4 +20,4 @@ CREATE PROCEDURE Act_03_Apartat_001(
 
 DELIMITER ;
 
-CALL Act_03_Apartat_001;
+CALL Act_03_Apartat_001();
