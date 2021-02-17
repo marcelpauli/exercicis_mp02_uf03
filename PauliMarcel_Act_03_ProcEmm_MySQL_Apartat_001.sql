@@ -19,3 +19,5 @@ CREATE PROCEDURE Act_03_Apartat_001(
  END //
 
 DELIMITER ;
+
+CALL Act_03_Apartat_001;
