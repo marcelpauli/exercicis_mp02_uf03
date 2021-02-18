@@ -13,19 +13,19 @@
       INTO @nomactor, @sexea, @any
     FROM ACTORS
     WHERE id_actor=pi_actor;
-    IF any < 15 THEN
+    IF @any < 15 THEN
       SET estat = "nen";
-    ELSEIF any >= 15  AND any <= 25 THEN
+    ELSEIF @any >= 15  AND any <= 25 THEN
       SET estat = "home adolescent i jove";
-    ELSEIF any >= 26  AND any <= 40 THEN
+    ELSEIF @any >= 26  AND any <= 40 THEN
       SET estat = "home adult";
-    ELSEIF any >= 41  AND any <= 60 THEN
+    ELSEIF @any >= 41  AND any <= 60 THEN
       SET estat = "home madur";  
-    ELSEIF any > 61 THEN
+    ELSEIF @any > 61 THEN
       SET estat = "home gran";    
     END IF;
 
-    SELECT @estat, @any, @nomactor, @sexea ;
+    SELECT @nomactor, @any, @sexea, @estat;
   END//
   DELIMITER ;
   CALL Act_03_Apartat_007(3, @estat);
