@@ -15,5 +15,5 @@ CREATE PROCEDURE Act_03_Apartat_005(
     WHERE  principal = 1 AND ACTORS_PELLICULES.id_peli = c_peli;      
   END //
 DELIMITER ;
-CALL Act_03_Apartat_005(2);
-SELECT @nomactor, @edatactor;
+CALL Act_03_Apartat_004(2);
+SELECT @actorPrincipal;
