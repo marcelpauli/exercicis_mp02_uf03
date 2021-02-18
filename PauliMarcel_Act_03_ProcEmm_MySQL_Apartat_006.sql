@@ -6,16 +6,13 @@
     OUT nivell varchar(20)
   )
   BEGIN
-
     DECLARE varReca bigint unsigned;
     DECLARE varPres bigint unsigned;
     DECLARE titolpeli varchar(40);
-
     SELECT recaudacio_peli, pressupost_peli, titol_peli
-      INTO varReca, varPres, titolpeli
+      INTO varReca, varPres, @titolpeli
     FROM PELLICULES
     WHERE id_peli=pi_peli;
-
     IF varReca < varPres THEN
       SET nivell = "Deficitari";
     ELSEIF varReca < varPres*2 THEN
@@ -23,11 +20,7 @@
     ELSEIF varReca*2 > varPres THEN
       SET nivell = "Bona";
     END IF;
-
     SELECT @nivell, @titolpeli;
-
   END//
   DELIMITER ;
-
-  CALL Act_03_Apartat_006(3, @hola);
-  
+  CALL Act_03_Apartat_006(3, @nivell);
