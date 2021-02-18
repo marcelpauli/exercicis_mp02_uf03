@@ -7,7 +7,7 @@ CREATE PROCEDURE Act_03_Apartat_004(
   BEGIN
     DECLARE actorPrincipal smallint unsigned;
     SELECT  id_actor
-      INTO actorPrincipal
+      INTO @actorPrincipal
     FROM ACTORS_PELLICULES
     WHERE  principal = 1 AND id_peli = c_peli;      
   END //
