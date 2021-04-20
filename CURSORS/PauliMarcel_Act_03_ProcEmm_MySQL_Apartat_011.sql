@@ -1,30 +1,21 @@
 USE videoclub;
-DROP FUNCTION IF EXISTS act11;
+DROP FUNCTION IF EXISTS act_11;
 
 DELIMITER //
-CREATE FUNCTION act11(peCodiPeli SMALLINT UNSIGNED) 
+CREATE FUNCTION act_11(cPeli SMALLINT UNSIGNED) 
        RETURNS SMALLINT UNSIGNED
        DETERMINISTIC
 BEGIN
-   DECLARE QtatExemplars SMALLINT UNSIGNED;
+   DECLARE visualitzacions SMALLINT UNSIGNED;
 
    SELECT   COUNT(*)
-        INTO QtatExemplars
-   FROM     EXEMPLARS
-   WHERE    id_peli = peCodiPeli;
-
-   RETURN QtatExemplars;
+        INTO visualitzacions
+   FROM  VISUALITZACIONS
+   WHERE id_peli = cPeli;
+   RETURN visualitzacions;
 END//
 DELIMITER ;
 
-
---MariaDB>   SELECT  titol_peli Titol, act11(1) "Quantitat exemplars"
---   ->   FROM    PELLICULES
---   ->   WHERE   id_peli = 1;
---+-------------+---------------------+
---| Titol       | Quantitat exemplars |
---+-------------+---------------------+
---| La busqueda |                   4 |
---+-------------+---------------------+
---1 row in set (0.00 sec)
-
+SELECT  titol_peli, act_11(3) "visualitzacions"
+FROM    PELLICULES
+WHERE   id_peli = 3;
