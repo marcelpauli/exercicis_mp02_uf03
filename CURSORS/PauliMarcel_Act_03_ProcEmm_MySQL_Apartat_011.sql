@@ -15,7 +15,3 @@ BEGIN
    RETURN visualitzacions;
 END//
 DELIMITER ;
-
-SELECT  titol_peli, act_11(3) "visualitzacions"
-FROM    PELLICULES
-WHERE   id_peli = 3;
