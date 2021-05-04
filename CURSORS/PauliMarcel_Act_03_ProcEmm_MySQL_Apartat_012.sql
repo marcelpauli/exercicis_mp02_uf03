@@ -21,7 +21,3 @@ CREATE FUNCTION act_012(cPeli SMALLINT UNSIGNED)
     END //
 
 DELIMITER ;
-
-SELECT titol_peli Titol, act_012(8) "Nom Actor"
-    FROM PELLICULES
-        WHERE id_peli = 8;
