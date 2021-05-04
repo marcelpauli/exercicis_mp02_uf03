@@ -245,15 +245,108 @@ Query OK, 0 rows affected (0.01 sec)
 ## Emprant l’**activitat 7**, dissenya un cursor que llisti els mateixos camps per a tots els intèrprets.
 
 **1. Enllaç al fitxer**
-
+[PauliMarcel_Act_03_ProcEmm_MySQL_Apartat_009](https://github.com/marcelpauli/exercicis_mp02_uf03/blob/master/CURSORS/PauliMarcel_Act_03_ProcEmm_MySQL_Apartat_009.sql)
 **2. Contingut del fitxer**
 ```sql
-   <El codi del vostre fitxer>
+  USE videoclub;
+DELIMITER //
+DROP PROCEDURE IF EXISTS PardoJoan_Act_03_ProcEmm_MySQL_Apartat_010//
+CREATE PROCEDURE PardoJoan_Act_03_ProcEmm_MySQL_Apartat_010(
+ IN  pi_actor       smallint)
+  BEGIN
+   DECLARE pa_nomActor       varchar(30);
+   DECLARE pa_edatActor      smallint;
+   DECLARE pa_sexeActor      varchar(6);
+   DECLARE pa_paper          varchar(50);
+SELECT nom_actor, year(curdate())-anynaix_actor, sexe_actor
+   INTO pa_nomActor, pa_edatActor, pa_sexeActor
+FROM   ACTORS
+WHERE  id_actor=pi_actor; 
+
+IF pa_sexeActor = "home" THEN
+   IF pa_edatActor<15 THEN
+      SET pa_paper = "de nen";
+   ELSEIF  pa_edatActor<25 THEN  /* edat>=15 AND edat<=25 /
+         SET pa_paper = "d'home adolescent i jove";
+   ELSEIF  pa_edatActor<40 THEN  / edat>=25 AND edat<=40 /
+         SET pa_paper = "d'home adult";
+   ELSEIF  pa_edatActor<60 THEN  / edat>=40 AND edat<=60 /
+         SET pa_paper = "d'home madur";
+   ELSEIF  pa_edatActor>=60 THEN  / edat>=40 AND edat<=60 /
+         SET pa_paper = "d'home gran";
+  END IF;
+  SELECT concat("L'actor ", pa_nomActor, " té ", pa_edatActor , " anys i pot fer ", pa_paper, ".") AS Frase;
+ELSE
+   IF pa_edatActor<15 THEN
+      SET pa_paper = "nena";
+   ELSEIF  pa_edatActor<25 THEN  / edat>=15 AND edat<=25 /
+         SET pa_paper = "dona adolescent i jove";
+   ELSEIF  pa_edatActor<40 THEN  / edat>=25 AND edat<=40 /
+         SET pa_paper = "dona adulta";
+   ELSEIF  pa_edatActor<60 THEN  / edat>=40 AND edat<=60 /
+         SET pa_paper = "dona madura";
+   ELSEIF  pa_edatActor>=60 THEN  / edat>=40 AND edat<=60 */
+         SET pa_paper = "dona gran";
+     END IF;
+    SELECT concat("L'actriu ", pa_nomActor, " té ", pa_edatActor , " anys i pot fer de ", pa_paper, ".") AS Frase;
+END IF;
+  END //
+DELIMITER ;
+
 ```
 
 **3. Sortida de la creació del procediment**
 ```sql
-   <La sortida de la creació del vostre procediment>
+   MariaDB [videoclub]> USE videoclub;
+Database changed
+MariaDB [videoclub]> DELIMITER //
+MariaDB [videoclub]> DROP PROCEDURE IF EXISTS PardoJoan_Act_03_ProcEmm_MySQL_Apa                                                                                                                                                             rtat_010//
+Query OK, 0 rows affected, 1 warning (0.007 sec)
+
+MariaDB [videoclub]> CREATE PROCEDURE PardoJoan_Act_03_ProcEmm_MySQL_Apartat_010                                                                                                                                                             (
+    ->  IN  pi_actor       smallint)
+    ->   BEGIN
+    ->    DECLARE pa_nomActor       varchar(30);
+    ->    DECLARE pa_edatActor      smallint;
+    ->    DECLARE pa_sexeActor      varchar(6);
+    ->    DECLARE pa_paper          varchar(50);
+    -> SELECT nom_actor, year(curdate())-anynaix_actor, sexe_actor
+    ->    INTO pa_nomActor, pa_edatActor, pa_sexeActor
+    -> FROM   ACTORS
+    -> WHERE  id_actor=pi_actor;
+    ->
+    -> IF pa_sexeActor = "home" THEN
+    ->    IF pa_edatActor<15 THEN
+    ->       SET pa_paper = "de nen";
+    ->    ELSEIF  pa_edatActor<25 THEN  /* edat>=15 AND edat<=25 /
+   /*>          SET pa_paper = "d'home adolescent i jove";
+   /*>    ELSEIF  pa_edatActor<40 THEN  / edat>=25 AND edat<=40 /
+   /*>          SET pa_paper = "d'home adult";
+   /*>    ELSEIF  pa_edatActor<60 THEN  / edat>=40 AND edat<=60 /
+   /*>          SET pa_paper = "d'home madur";
+   /*>    ELSEIF  pa_edatActor>=60 THEN  / edat>=40 AND edat<=60 /
+   /*>          SET pa_paper = "d'home gran";
+   /*>   END IF;
+   /*>   SELECT concat("L'actor ", pa_nomActor, " té ", pa_edatActor , " anys i                                                                                                                                                              pot fer ", pa_paper, ".") AS Frase;
+   /*> ELSE
+   /*>    IF pa_edatActor<15 THEN
+   /*>       SET pa_paper = "nena";
+   /*>    ELSEIF  pa_edatActor<25 THEN  / edat>=15 AND edat<=25 /
+   /*>          SET pa_paper = "dona adolescent i jove";
+   /*>    ELSEIF  pa_edatActor<40 THEN  / edat>=25 AND edat<=40 /
+   /*>          SET pa_paper = "dona adulta";
+   /*>    ELSEIF  pa_edatActor<60 THEN  / edat>=40 AND edat<=60 /
+   /*>          SET pa_paper = "dona madura";
+   /*>    ELSEIF  pa_edatActor>=60 THEN  / edat>=40 AND edat<=60 */
+    ->          SET pa_paper = "dona gran";
+    ->      END IF;
+    ->     SELECT concat("L'actriu ", pa_nomActor, " té ", pa_edatActor , " anys                                                                                                                                                              i pot fer de ", pa_paper, ".") AS Frase;
+    -> END IF;
+    ->   END //
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [videoclub]> DELIMITER ;
+
 ```
 
 **4. Sortida de l'execució del procediment**
@@ -268,20 +361,62 @@ Query OK, 0 rows affected (0.01 sec)
 ## Dissenya una funció que rebent un codi de pel·lícula torni el nombre d’usuaris que l’han vist.<br>Utilitza aquesta funció per llistar el títol de la pel·lícula i el nom de l’usuari.
 
 **1. Enllaç al fitxer**
-
+[PauliMarcel_Act_03_ProcEmm_MySQL_Apartat_011](https://github.com/marcelpauli/exercicis_mp02_uf03/blob/master/CURSORS/PauliMarcel_Act_03_ProcEmm_MySQL_Apartat_011.sql)
 **2. Contingut del fitxer**
 ```sql
-   <El codi del vostre fitxer>
+   USE videoclub;
+DROP FUNCTION IF EXISTS act_11;
+
+DELIMITER //
+CREATE FUNCTION act_11(cPeli SMALLINT UNSIGNED) 
+       RETURNS SMALLINT UNSIGNED
+       DETERMINISTIC
+BEGIN
+   DECLARE visualitzacions SMALLINT UNSIGNED;
+
+   SELECT   COUNT(*)
+        INTO visualitzacions
+   FROM  VISUALITZACIONS
+   WHERE id_peli = cPeli;
+   RETURN visualitzacions;
+END//
+DELIMITER ;
+
 ```
 
 **3. Sortida de la creació del procediment**
 ```sql
-   <La sortida de la creació del vostre procediment>
+   MariaDB [videoclub]> DELIMITER //
+MariaDB [videoclub]> CREATE FUNCTION act_11(cPeli SMALLINT UNSIGNED)
+    ->        RETURNS SMALLINT UNSIGNED
+    ->        DETERMINISTIC
+    -> BEGIN
+    ->    DECLARE visualitzacions SMALLINT UNSIGNED;
+    ->
+    ->    SELECT   COUNT(*)
+    ->         INTO visualitzacions
+    ->    FROM  VISUALITZACIONS
+    ->    WHERE id_peli = cPeli;
+    ->    RETURN visualitzacions;
+    -> END//
+Query OK, 0 rows affected (0.004 sec)
+
+MariaDB [videoclub]> DELIMITER ;
+
 ```
 
 **4. Sortida de l'execució del procediment**
 ```sql
-   <La sortida de l'execució del vostre procediment>
+   MariaDB [videoclub]> SELECT  titol_peli, act_11(2) "visualitzacions"
+    -> FROM    PELLICULES
+    -> WHERE   id_peli = 2;
++-------------+-----------------+
+| titol_peli  | visualitzacions |
++-------------+-----------------+
+| La terminal |               2 |
++-------------+-----------------+
+1 row in set (0.001 sec)
+
 ```
 
 ---
@@ -291,20 +426,78 @@ Query OK, 0 rows affected (0.01 sec)
 ## Dissenya una funció que rebi el codi d’una pel·lícula i torni el nom i cognoms del seu actor principal.<br>Utilitza aquesta funció per llistar el títol de la pel·lícula i el nom i cognoms del seu actor principal.
 
 **1. Enllaç al fitxer**
-
+[PauliMarcel_Act_03_ProcEmm_MySQL_Apartat_012](https://github.com/marcelpauli/exercicis_mp02_uf03/blob/master/CURSORS/PauliMarcel_Act_03_ProcEmm_MySQL_Apartat_012.sql)
 **2. Contingut del fitxer**
 ```sql
-   <El codi del vostre fitxer>
+   DELIMITER //
+USE videoclub//
+DROP FUNCTION IF EXISTS act_012//
+CREATE FUNCTION act_012(cPeli SMALLINT UNSIGNED)
+    RETURNS varchar(30)
+    DETERMINISTIC
+    BEGIN
+
+    declare NomActor varchar(30) default "";
+
+    SELECT act.nom_actor
+        INTO nomActor
+    FROM PELLICULES peli
+        INNER JOIN ACTORS_PELLICULES act_pel
+    ON act_pel.id_peli = peli.id_peli
+        INNER JOIN ACTORS act
+    ON act.id_actor = act_pel.id_actor
+    WHERE peli.id_peli = cPeli AND PRINCIPAL = 1
+    LIMIT 1;
+    return (NomActor);
+    END //
+
+DELIMITER ;
 ```
 
 **3. Sortida de la creació del procediment**
 ```sql
-   <La sortida de la creació del vostre procediment>
+   MariaDB [videoclub]> USE videoclub//
+Database changed
+MariaDB [videoclub]> DROP FUNCTION IF EXISTS act_012//
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+MariaDB [videoclub]> CREATE FUNCTION act_012(cPeli SMALLINT UNSIGNED)
+    ->     RETURNS varchar(30)
+    ->     DETERMINISTIC
+    ->     BEGIN
+    ->
+    ->     declare NomActor varchar(30) default "";
+    ->
+    ->     SELECT act.nom_actor
+    ->         INTO nomActor
+    ->     FROM PELLICULES peli
+    ->         INNER JOIN ACTORS_PELLICULES act_pel
+    ->     ON act_pel.id_peli = peli.id_peli
+    ->         INNER JOIN ACTORS act
+    ->     ON act.id_actor = act_pel.id_actor
+    ->     WHERE peli.id_peli = cPeli AND PRINCIPAL = 1
+    ->     LIMIT 1;
+    ->     return (NomActor);
+    ->     END //
+Query OK, 0 rows affected (0.004 sec)
+
+MariaDB [videoclub]>
+MariaDB [videoclub]> DELIMITER ;
+
 ```
 
 **4. Sortida de l'execució del procediment**
 ```sql
-   <La sortida de l'execució del vostre procediment>
+   MariaDB [videoclub]> SELECT titol_peli Titol, act_012(5) "Nom Actor"
+    ->     FROM PELLICULES
+    ->         WHERE id_peli = 5;
++--------------------+--------------+
+| Titol              | Nom Actor    |
++--------------------+--------------+
+| Los 4 fantásticos  | Jessica Alba |
++--------------------+--------------+
+1 row in set (0.001 sec)
+
 ```
 
 ---
@@ -314,15 +507,52 @@ Query OK, 0 rows affected (0.01 sec)
 ## Fes una funció que torni el codi de pel·lícula que més ha recaptat.<br>Emprant la funció anterior i la funció de l’**activitat 12**, llista el títol, actor principal i recaptació de la pel·lícula que més ha recaptat.
 
 **1. Enllaç al fitxer**
-
+[PauliMarcel_Act_03_ProcEmm_MySQL_Apartat_013](https://github.com/marcelpauli/exercicis_mp02_uf03/blob/master/CURSORS/PauliMarcel_Act_03_ProcEmm_MySQL_Apartat_013.sql)
 **2. Contingut del fitxer**
 ```sql
-   <El codi del vostre fitxer>
+   DELIMITER //
+USE videoclub//
+DROP FUNCTION IF EXISTS act_013//
+CREATE FUNCTION act_013()
+    RETURNS SMALLINT UNSIGNED
+    DETERMINISTIC
+    BEGIN
+
+    declare idPeli SMALLINT UNSIGNED;
+
+    SELECT id_peli
+        INTO idPeli
+    FROM PELLICULES
+    WHERE recaudacio_peli = (SELECT max(recaudacio_peli) FROM   PELLICULES );
+    return (idPeli);
+    END //
+
+DELIMITER ;
 ```
 
 **3. Sortida de la creació del procediment**
 ```sql
-   <La sortida de la creació del vostre procediment>
+   MariaDB [videoclub]> DROP FUNCTION IF EXISTS act_013//
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+MariaDB [videoclub]> CREATE FUNCTION act_013()
+    ->     RETURNS SMALLINT UNSIGNED
+    ->     DETERMINISTIC
+    ->     BEGIN
+    ->
+    ->     declare idPeli SMALLINT UNSIGNED;
+    ->
+    ->     SELECT id_peli
+    ->         INTO idPeli
+    ->     FROM PELLICULES
+    ->     WHERE recaudacio_peli = (SELECT max(recaudacio_peli) FROM   PELLICULES );
+    ->     return (idPeli);
+    ->     END //
+Query OK, 0 rows affected (0.003 sec)
+
+MariaDB [videoclub]>
+MariaDB [videoclub]> DELIMITER ;
+
 ```
 
 **4. Sortida de l'execució del procediment**
