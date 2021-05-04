@@ -248,60 +248,94 @@ Query OK, 0 rows affected (0.01 sec)
 [PauliMarcel_Act_03_ProcEmm_MySQL_Apartat_009](https://github.com/marcelpauli/exercicis_mp02_uf03/blob/master/CURSORS/PauliMarcel_Act_03_ProcEmm_MySQL_Apartat_009.sql)
 **2. Contingut del fitxer**
 ```sql
-  USE videoclub;
+ USE videoclub;
+DROP PROCEDURE IF EXISTS act9;
 DELIMITER //
-DROP PROCEDURE IF EXISTS PardoJoan_Act_03_ProcEmm_MySQL_Apartat_010//
-CREATE PROCEDURE PardoJoan_Act_03_ProcEmm_MySQL_Apartat_010(
- IN  pi_actor       smallint)
-  BEGIN
-   DECLARE pa_nomActor       varchar(30);
-   DECLARE pa_edatActor      smallint;
-   DECLARE pa_sexeActor      varchar(6);
-   DECLARE pa_paper          varchar(50);
-SELECT nom_actor, year(curdate())-anynaix_actor, sexe_actor
-   INTO pa_nomActor, pa_edatActor, pa_sexeActor
-FROM   ACTORS
-WHERE  id_actor=pi_actor; 
+CREATE PROCEDURE act9()
+BEGIN
+   DECLARE edat bigint;
+   DECLARE nom varchar(30);
+   DECLARE sexe varchar(6);
+   DECLARE final int default false;
+   DECLARE tipusDePaper varchar(6);
+   DECLARE elcursor cursor FOR
+      SELECT ACTORS.sexe_actor, YEAR(CURDATE())-ACTORS.anynaix_actor, ACTORS.nom_actor
+   FROM ACTORS;
 
-IF pa_sexeActor = "home" THEN
-   IF pa_edatActor<15 THEN
-      SET pa_paper = "de nen";
-   ELSEIF  pa_edatActor<25 THEN 
-         SET pa_paper = "dona gran";
-     END IF;
-    SELECT concat("L'actriu ", pa_nomActor, " té ", pa_edatActor , " anys i pot fer de ", pa_paper, ".") AS Frase;
-END IF;
-  END //
+   DECLARE CONTINUE handler for NOT found SET final = 1;
+   OPEN elcursor;
+   elbucle:LOOP
+      FETCH elcursor INTO sexe, edat, nom;
+
+      IF final = 1 THEN
+         leave elbucle;
+      END IF;
+
+      IF edat < 15 THEN
+    SET tipusDePaper ="nen";
+    ELSEIF edat > 15 AND edat < 25 THEN
+    SET tipusDePaper ="jove";
+    ELSEIF edat > 26 AND edat < 40 THEN
+    SET tipusDePaper ="adult";
+    ELSEIF edat > 41 AND edat < 60 THEN
+    SET tipusDePaper ="madur";
+    ELSEIF edat > 61 THEN
+    SET tipusDePaper ="gran";
+    END IF;
+
+    SELECT nom, sexe, edat, tipusDePaper;
+
+   END LOOP elbucle; 
+   CLOSE elcursor;
+END//
+
 DELIMITER ;
-
 
 ```
 
 **3. Sortida de la creació del procediment**
 ```sql
-  MariaDB [videoclub]> CREATE PROCEDURE PardoJoan_Act_03_ProcEmm_MySQL_Apartat_010(
-    ->  IN  pi_actor       smallint)
-    ->   BEGIN
-    ->    DECLARE pa_nomActor       varchar(30);
-    ->    DECLARE pa_edatActor      smallint;
-    ->    DECLARE pa_sexeActor      varchar(6);
-    ->    DECLARE pa_paper          varchar(50);
-    -> SELECT nom_actor, year(curdate())-anynaix_actor, sexe_actor
-    ->    INTO pa_nomActor, pa_edatActor, pa_sexeActor
-    -> FROM   ACTORS
-    -> WHERE  id_actor=pi_actor;
+ MariaDB [videoclub]> DELIMITER //
+MariaDB [videoclub]> CREATE PROCEDURE act9()
+    -> BEGIN
+    ->    DECLARE edat bigint;
+    ->    DECLARE nom varchar(30);
+    ->    DECLARE sexe varchar(6);
+    ->    DECLARE final int default false;
+    ->    DECLARE tipusDePaper varchar(6);
+    ->    DECLARE elcursor cursor FOR
+    ->       SELECT ACTORS.sexe_actor, YEAR(CURDATE())-ACTORS.anynaix_actor, ACTORS.nom_actor
+    ->    FROM ACTORS;
     ->
-    -> IF pa_sexeActor = "home" THEN
-    ->    IF pa_edatActor<15 THEN
-    ->       SET pa_paper = "de nen";
-    ->    ELSEIF  pa_edatActor<25 THEN
-    ->          SET pa_paper = "dona gran";
-    ->      END IF;
-    ->     SELECT concat("L'actriu ", pa_nomActor, " té ", pa_edatActor , " anys i pot fer de ", pa_paper, ".") AS Frase;
-    -> END IF;
-    ->   END //
-Query OK, 0 rows affected (0.004 sec)
+    ->    DECLARE CONTINUE handler for NOT found SET final = 1;
+    ->    OPEN elcursor;
+    ->    elbucle:LOOP
+    ->       FETCH elcursor INTO sexe, edat, nom;
+    ->
+    ->       IF final = 1 THEN
+    ->          leave elbucle;
+    ->       END IF;
+    ->
+    ->       IF edat < 15 THEN
+    ->     SET tipusDePaper ="nen";
+    ->     ELSEIF edat > 15 AND edat < 25 THEN
+    ->     SET tipusDePaper ="jove";
+    ->     ELSEIF edat > 26 AND edat < 40 THEN
+    ->     SET tipusDePaper ="adult";
+    ->     ELSEIF edat > 41 AND edat < 60 THEN
+    ->     SET tipusDePaper ="madur";
+    ->     ELSEIF edat > 61 THEN
+    ->     SET tipusDePaper ="gran";
+    ->     END IF;
+    ->
+    ->     SELECT nom, sexe, edat, tipusDePaper;
+    ->
+    ->    END LOOP elbucle;
+    ->    CLOSE elcursor;
+    -> END//
+Query OK, 0 rows affected (0.002 sec)
 
+MariaDB [videoclub]>
 MariaDB [videoclub]> DELIMITER ;
 
 
@@ -309,7 +343,191 @@ MariaDB [videoclub]> DELIMITER ;
 
 **4. Sortida de l'execució del procediment**
 ```sql
-   <La sortida de l'execució del vostre procediment>
+  MariaDB [videoclub]> call act9();
++--------------+------+------+--------------+
+| nom          | sexe | edat | tipusDePaper |
++--------------+------+------+--------------+
+| Nicolas Cage | home |   57 | madur        |
++--------------+------+------+--------------+
+1 row in set (0.002 sec)
+
++--------------+------+------+--------------+
+| nom          | sexe | edat | tipusDePaper |
++--------------+------+------+--------------+
+| Diane Kruger | dona |   45 | madur        |
++--------------+------+------+--------------+
+1 row in set (0.002 sec)
+
++-----------+------+------+--------------+
+| nom       | sexe | edat | tipusDePaper |
++-----------+------+------+--------------+
+| Tom Hanks | home |   65 | gran         |
++-----------+------+------+--------------+
+1 row in set (0.002 sec)
+
++----------------------+------+------+--------------+
+| nom                  | sexe | edat | tipusDePaper |
++----------------------+------+------+--------------+
+| Catherine Zeta-Jones | dona |   52 | madur        |
++----------------------+------+------+--------------+
+1 row in set (0.002 sec)
+
++---------------+------+------+--------------+
+| nom           | sexe | edat | tipusDePaper |
++---------------+------+------+--------------+
+| Javier Bardem | home |   52 | madur        |
++---------------+------+------+--------------+
+1 row in set (0.002 sec)
+
++------------+------+------+--------------+
+| nom        | sexe | edat | tipusDePaper |
++------------+------+------+--------------+
+| Tom Cruise | home |   59 | madur        |
++------------+------+------+--------------+
+1 row in set (0.003 sec)
+
++------------+------+------+--------------+
+| nom        | sexe | edat | tipusDePaper |
++------------+------+------+--------------+
+| Jamie Foxx | home |   54 | madur        |
++------------+------+------+--------------+
+1 row in set (0.003 sec)
+
++--------------+------+------+--------------+
+| nom          | sexe | edat | tipusDePaper |
++--------------+------+------+--------------+
+| Jessica Alba | dona |   40 | madur        |
++--------------+------+------+--------------+
+1 row in set (0.003 sec)
+
++---------------+------+------+--------------+
+| nom           | sexe | edat | tipusDePaper |
++---------------+------+------+--------------+
+| Ioan Gruffudd | home |   48 | madur        |
++---------------+------+------+--------------+
+1 row in set (0.003 sec)
+
++-------------------+------+------+--------------+
+| nom               | sexe | edat | tipusDePaper |
++-------------------+------+------+--------------+
+| Robert Downey Jr. | home |   56 | madur        |
++-------------------+------+------+--------------+
+1 row in set (0.003 sec)
+
++-----------------+------+------+--------------+
+| nom             | sexe | edat | tipusDePaper |
++-----------------+------+------+--------------+
+| Gwyneth Paltrow | dona |   49 | madur        |
++-----------------+------+------+--------------+
+1 row in set (0.003 sec)
+
++-----------------+------+------+--------------+
+| nom             | sexe | edat | tipusDePaper |
++-----------------+------+------+--------------+
+| Chris Hemsworth | home |   38 | adult        |
++-----------------+------+------+--------------+
+1 row in set (0.003 sec)
+
++--------------+------+------+--------------+
+| nom          | sexe | edat | tipusDePaper |
++--------------+------+------+--------------+
+| Mark Ruffalo | home |   54 | madur        |
++--------------+------+------+--------------+
+1 row in set (0.004 sec)
+
++-------------+------+------+--------------+
+| nom         | sexe | edat | tipusDePaper |
++-------------+------+------+--------------+
+| Chris Evans | home |   40 | madur        |
++-------------+------+------+--------------+
+1 row in set (0.004 sec)
+
++--------------------+------+------+--------------+
+| nom                | sexe | edat | tipusDePaper |
++--------------------+------+------+--------------+
+| Scarlett Johansson | dona |   37 | adult        |
++--------------------+------+------+--------------+
+1 row in set (0.004 sec)
+
++---------------+------+------+--------------+
+| nom           | sexe | edat | tipusDePaper |
++---------------+------+------+--------------+
+| Jeremy Renner | home |   40 | adult        |
++---------------+------+------+--------------+
+1 row in set (0.004 sec)
+
++--------------+------+------+--------------+
+| nom          | sexe | edat | tipusDePaper |
++--------------+------+------+--------------+
+| James Spader | home |   61 | adult        |
++--------------+------+------+--------------+
+1 row in set (0.004 sec)
+
++-----------------+------+------+--------------+
+| nom             | sexe | edat | tipusDePaper |
++-----------------+------+------+--------------+
+| Michael Chiklis | home |   52 | madur        |
++-----------------+------+------+--------------+
+1 row in set (0.004 sec)
+
++---------------+------+------+--------------+
+| nom           | sexe | edat | tipusDePaper |
++---------------+------+------+--------------+
+| Hayley Atwell | dona |   39 | adult        |
++---------------+------+------+--------------+
+1 row in set (0.004 sec)
+
++----------------+------+------+--------------+
+| nom            | sexe | edat | tipusDePaper |
++----------------+------+------+--------------+
+| Sebastian Stan | home |   39 | adult        |
++----------------+------+------+--------------+
+1 row in set (0.005 sec)
+
++-----------------------+------+------+--------------+
+| nom                   | sexe | edat | tipusDePaper |
++-----------------------+------+------+--------------+
+| John David Washington | home |   37 | adult        |
++-----------------------+------+------+--------------+
+1 row in set (0.005 sec)
+
++---------------------+------+------+--------------+
+| nom                 | sexe | edat | tipusDePaper |
++---------------------+------+------+--------------+
+| Adam Douglas Driver | home |   38 | adult        |
++---------------------+------+------+--------------+
+1 row in set (0.005 sec)
+
++------------+------+------+--------------+
+| nom        | sexe | edat | tipusDePaper |
++------------+------+------+--------------+
+| Rami Malek | home |   40 | adult        |
++------------+------+------+--------------+
+1 row in set (0.005 sec)
+
++-----------------+------+------+--------------+
+| nom             | sexe | edat | tipusDePaper |
++-----------------+------+------+--------------+
+| Joaquin Phoenix | home |   47 | madur        |
++-----------------+------+------+--------------+
+1 row in set (0.005 sec)
+
++----------------+------+------+--------------+
+| nom            | sexe | edat | tipusDePaper |
++----------------+------+------+--------------+
+| Robert de Niro | home |   78 | gran         |
++----------------+------+------+--------------+
+1 row in set (0.005 sec)
+
++-------------+------+------+--------------+
+| nom         | sexe | edat | tipusDePaper |
++-------------+------+------+--------------+
+| Zazie Beetz | dona |   30 | adult        |
++-------------+------+------+--------------+
+1 row in set (0.005 sec)
+
+Query OK, 0 rows affected (0.006 sec)
+
 ```
 
 ---
