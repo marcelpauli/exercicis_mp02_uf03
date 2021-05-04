@@ -266,26 +266,7 @@ WHERE  id_actor=pi_actor;
 IF pa_sexeActor = "home" THEN
    IF pa_edatActor<15 THEN
       SET pa_paper = "de nen";
-   ELSEIF  pa_edatActor<25 THEN  /* edat>=15 AND edat<=25 /
-         SET pa_paper = "d'home adolescent i jove";
-   ELSEIF  pa_edatActor<40 THEN  / edat>=25 AND edat<=40 /
-         SET pa_paper = "d'home adult";
-   ELSEIF  pa_edatActor<60 THEN  / edat>=40 AND edat<=60 /
-         SET pa_paper = "d'home madur";
-   ELSEIF  pa_edatActor>=60 THEN  / edat>=40 AND edat<=60 /
-         SET pa_paper = "d'home gran";
-  END IF;
-  SELECT concat("L'actor ", pa_nomActor, " té ", pa_edatActor , " anys i pot fer ", pa_paper, ".") AS Frase;
-ELSE
-   IF pa_edatActor<15 THEN
-      SET pa_paper = "nena";
-   ELSEIF  pa_edatActor<25 THEN  / edat>=15 AND edat<=25 /
-         SET pa_paper = "dona adolescent i jove";
-   ELSEIF  pa_edatActor<40 THEN  / edat>=25 AND edat<=40 /
-         SET pa_paper = "dona adulta";
-   ELSEIF  pa_edatActor<60 THEN  / edat>=40 AND edat<=60 /
-         SET pa_paper = "dona madura";
-   ELSEIF  pa_edatActor>=60 THEN  / edat>=40 AND edat<=60 */
+   ELSEIF  pa_edatActor<25 THEN 
          SET pa_paper = "dona gran";
      END IF;
     SELECT concat("L'actriu ", pa_nomActor, " té ", pa_edatActor , " anys i pot fer de ", pa_paper, ".") AS Frase;
@@ -293,17 +274,12 @@ END IF;
   END //
 DELIMITER ;
 
+
 ```
 
 **3. Sortida de la creació del procediment**
 ```sql
-   MariaDB [videoclub]> USE videoclub;
-Database changed
-MariaDB [videoclub]> DELIMITER //
-MariaDB [videoclub]> DROP PROCEDURE IF EXISTS PardoJoan_Act_03_ProcEmm_MySQL_Apa                                                                                                                                                             rtat_010//
-Query OK, 0 rows affected, 1 warning (0.007 sec)
-
-MariaDB [videoclub]> CREATE PROCEDURE PardoJoan_Act_03_ProcEmm_MySQL_Apartat_010                                                                                                                                                             (
+  MariaDB [videoclub]> CREATE PROCEDURE PardoJoan_Act_03_ProcEmm_MySQL_Apartat_010(
     ->  IN  pi_actor       smallint)
     ->   BEGIN
     ->    DECLARE pa_nomActor       varchar(30);
@@ -318,34 +294,16 @@ MariaDB [videoclub]> CREATE PROCEDURE PardoJoan_Act_03_ProcEmm_MySQL_Apartat_010
     -> IF pa_sexeActor = "home" THEN
     ->    IF pa_edatActor<15 THEN
     ->       SET pa_paper = "de nen";
-    ->    ELSEIF  pa_edatActor<25 THEN  /* edat>=15 AND edat<=25 /
-   /*>          SET pa_paper = "d'home adolescent i jove";
-   /*>    ELSEIF  pa_edatActor<40 THEN  / edat>=25 AND edat<=40 /
-   /*>          SET pa_paper = "d'home adult";
-   /*>    ELSEIF  pa_edatActor<60 THEN  / edat>=40 AND edat<=60 /
-   /*>          SET pa_paper = "d'home madur";
-   /*>    ELSEIF  pa_edatActor>=60 THEN  / edat>=40 AND edat<=60 /
-   /*>          SET pa_paper = "d'home gran";
-   /*>   END IF;
-   /*>   SELECT concat("L'actor ", pa_nomActor, " té ", pa_edatActor , " anys i                                                                                                                                                              pot fer ", pa_paper, ".") AS Frase;
-   /*> ELSE
-   /*>    IF pa_edatActor<15 THEN
-   /*>       SET pa_paper = "nena";
-   /*>    ELSEIF  pa_edatActor<25 THEN  / edat>=15 AND edat<=25 /
-   /*>          SET pa_paper = "dona adolescent i jove";
-   /*>    ELSEIF  pa_edatActor<40 THEN  / edat>=25 AND edat<=40 /
-   /*>          SET pa_paper = "dona adulta";
-   /*>    ELSEIF  pa_edatActor<60 THEN  / edat>=40 AND edat<=60 /
-   /*>          SET pa_paper = "dona madura";
-   /*>    ELSEIF  pa_edatActor>=60 THEN  / edat>=40 AND edat<=60 */
+    ->    ELSEIF  pa_edatActor<25 THEN
     ->          SET pa_paper = "dona gran";
     ->      END IF;
-    ->     SELECT concat("L'actriu ", pa_nomActor, " té ", pa_edatActor , " anys                                                                                                                                                              i pot fer de ", pa_paper, ".") AS Frase;
+    ->     SELECT concat("L'actriu ", pa_nomActor, " té ", pa_edatActor , " anys i pot fer de ", pa_paper, ".") AS Frase;
     -> END IF;
     ->   END //
-Query OK, 0 rows affected (0.001 sec)
+Query OK, 0 rows affected (0.004 sec)
 
 MariaDB [videoclub]> DELIMITER ;
+
 
 ```
 
